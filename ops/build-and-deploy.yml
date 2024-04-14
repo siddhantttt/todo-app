@@ -14,32 +14,34 @@
         name: docker
         state: started
         enabled: yes
-#
-#    - name: Pull latest code from GitHub
-#      git:
-#        repo: 'your_github_repository_url'
-#        dest: '/path/to/your/code'
-#        clone: yes
-#        update: yes
-#
-#    - name: Build Docker image
-#      docker_image:
-#        source: build
-#        build:
-#          path: "/path/to/your/code"
-#          tag: "your_image_name:latest"
-#
-#    - name: Stop any currently running container
-#      docker_container:
-#        name: "your_container"
-#        state: absent
-#
-#    - name: Start new Docker container
-#      docker_container:
-#        name: "your_container"
-#        image: "your_image_name:latest"
-#        state: started
-#        restart_policy: always
-#        ports:
-#          - "80:80"
-#
+
+    - name: Install git
+      package:
+        name: git
+        state: present
+
+
+    - name: Build Docker image
+      docker_image:
+        source: build
+        build:
+          path: "/home/ec2-user/todo-app"
+        name: "todo-app"
+        tag: "latest"
+
+    - name: Stop any currently running container
+      docker_container:
+        name: "todo-app"
+        state: absent
+
+    - name: Start new Docker container
+      docker_container:
+        name: "todo-app"
+        image: "todo-app:latest"
+        state: started
+        restart_policy: always
+        ports:
+          - "8080:8080"
+        env:
+          DB_DSN: "{{ DB_DSN }}"
+
