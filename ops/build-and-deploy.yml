@@ -1,0 +1,45 @@
+---
+- name: Set up Docker and deploy container
+  hosts: ec2
+  become: yes  # This is necessary to gain root privileges
+
+  tasks:
+    - name: Install Docker
+      package:
+        name: docker
+        state: present
+
+    - name: Ensure Docker is started
+      service:
+        name: docker
+        state: started
+        enabled: yes
+#
+#    - name: Pull latest code from GitHub
+#      git:
+#        repo: 'your_github_repository_url'
+#        dest: '/path/to/your/code'
+#        clone: yes
+#        update: yes
+#
+#    - name: Build Docker image
+#      docker_image:
+#        source: build
+#        build:
+#          path: "/path/to/your/code"
+#          tag: "your_image_name:latest"
+#
+#    - name: Stop any currently running container
+#      docker_container:
+#        name: "your_container"
+#        state: absent
+#
+#    - name: Start new Docker container
+#      docker_container:
+#        name: "your_container"
+#        image: "your_image_name:latest"
+#        state: started
+#        restart_policy: always
+#        ports:
+#          - "80:80"
+#
